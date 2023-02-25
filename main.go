@@ -1,0 +1,30 @@
+package main
+
+import (
+	"fmt"
+	"os"
+
+	"github.com/joho/godotenv"
+	"gorm.io/driver/sqlserver"
+	"gorm.io/gorm"
+)
+
+func main() {
+	envErr := godotenv.Load()
+	if envErr != nil {
+		fmt.Printf("Erro ao carregar credenciais %v\n", envErr)
+	}
+	var (
+		user     = os.Getenv("MSSQL_DB_USER")
+		password = os.Getenv("MSSQL_DB_PASSWORD")
+		port     = os.Getenv("MSSQL_DB_PORT")
+		database = os.Getenv("MSSQL_DB_DATABASE")
+	)
+	connectionString := fmt.Sprintf("user id=%s;password=%s;port=%s;database=%s", user, password, port, database)
+	db, err := gorm.Open(sqlserver.Open(connectionString), &gorm.Config{})
+	if err != nil {
+		panic("Falha ao conectar no banco")
+	}
+	// Teste com procedure
+	db.Exec("insertTeste", "testando conexao")
+}
