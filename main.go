@@ -67,6 +67,6 @@ func main() {
 		pokemon := <-ch
 		pokemons = append(pokemons, pokemon)
 	}
-	insertPokemon(pokemons)
+	go insertPokemon(pokemons)
 	fmt.Printf("Total carregado: %d \n", len(pokemons))
 }
