@@ -21,7 +21,6 @@ func Init() *gorm.DB {
 		database = os.Getenv("MSSQL_DB_DATABASE")
 	)
 	connectionString := fmt.Sprintf("user id=%s;password=%s;port=%s;database=%s", user, password, port, database)
-	fmt.Println(connectionString)
 	db, err := gorm.Open(sqlserver.Open(connectionString), &gorm.Config{})
 	if err != nil {
 		fmt.Printf("Falha ao conectar no banco %v\n", err)
