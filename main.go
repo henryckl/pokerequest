@@ -36,6 +36,13 @@ func getPokemon(url string) (pokemon *Pokemon, err error) {
 	return pokemon, nil
 }
 
+func insertPokemon(pokemons []Pokemon) {
+	db := database.Init()
+	for _, pokemon := range pokemons {
+		db.Exec("inserirPokemon", pokemon.Name, pokemon.Height, pokemon.Weight, pokemon.ID)
+	}
+}
+
 func main() {
 	start := time.Now()
 	defer func() {
@@ -56,12 +63,10 @@ func main() {
 			ch <- *poke
 		}(url)
 	}
-	db := database.Init()
 	for i := 0; i < len(makeRange(1, 1000)); i++ {
 		pokemon := <-ch
-		db.Exec("inserirPokemon", pokemon.Name, pokemon.Height, pokemon.Weight, pokemon.ID)
 		pokemons = append(pokemons, pokemon)
 	}
-
+	insertPokemon(pokemons)
 	fmt.Printf("Total carregado: %d \n", len(pokemons))
 }
